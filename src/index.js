@@ -21,27 +21,11 @@ myHeaders.append("Cookie", "isLogged=true;"); */
 let requestOptions = {
     method: 'GET',
     headers: {
-        age: '1349',
-        'alt-svc': 'h3=":443"; ma=86400, h3-29=":443"; ma=86400',
-        'cache-control': 'no-store',
-        'cf-cache-status': 'HIT',
-        'cf-ray': '7c23d7310b1d0ddf-SCL',
-        connection: 'close',
-        'content-encoding': 'br',
-        'content-language': 'es-co',
-        'content-type': 'text/html; charset=utf-8',
-        date: 'Thu, 04 May 2023 21:29:41 GMT',
-        expires: 'Fri, 03 May 2024 21:29:41 GMT',
-        'last-modified': 'Thu, 04 May 2023 14:44:36 GMT',
         server: 'cloudflare',
         'set-cookie': ['Cache-Control=no-cache'],
         'strict-transport-security': 'max-age=15552000; includeSubDomains; preload',
         'transfer-encoding': 'chunked',
-        vary: 'Accept-Encoding, Accept-Language, Cookie, Origin',
-        'x-content-type-options': 'nosniff',
-        'x-frame-options': 'SAMEORIGIN',
-        'x-xss-protection': '1; mode=block'
-      },
+    },
     redirect: 'follow'
 };
 
@@ -55,12 +39,12 @@ app.get('/api/students/:id', async (req, res) => {
 
     try {
         const user = req.params.id;
-
+        console.log(user);
         if (b == 0) {
             b++
             // Realizamos la primera petición
             firstResponse = await fetch(`${API}${user}/`, requestOptions);
-            console.log(firstResponse.status);
+            console.log("firstResponse "+firstResponse.status);
 
             // Si la respuesta de la primera petición es diferente a 200, detenemos el proceso
             if (firstResponse.status !== 200) {
@@ -79,7 +63,7 @@ app.get('/api/students/:id', async (req, res) => {
                 'Cache-Control': 'no-cache',
             },
         });
-
+        console.log("secondResponse " +secondResponse.status);
         // Si la respuesta de la segunda petición es diferente a 200, detenemos el proceso
         if (secondResponse.status !== 200) {
             return res.status(secondResponse.status).send(secondResponse.statusText);
