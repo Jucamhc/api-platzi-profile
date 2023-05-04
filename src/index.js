@@ -24,7 +24,7 @@ app.get('/', (req, res) => {
 });
 
 
-app.get('/api/students/:id', async (req, res) => {
+app.get('/api_profile/:id', async (req, res) => {
 
     try {
         const user = req.params.id;
@@ -52,7 +52,7 @@ app.get('/api/students/:id', async (req, res) => {
             },
         });
 
-        console.log( "secondResponse Status" + secondResponse.status);
+        console.log( "secondResponse Status " + secondResponse.status);
 
         // Si la respuesta de la segunda petición es diferente a 200, detenemos el proceso
         if (secondResponse.status !== 200) {
