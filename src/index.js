@@ -3,48 +3,37 @@ const app = express()
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 const API = 'https://platzi.com/p/'
 
+/*------------------- VARIABLES  ----------------------*/
+
 let arrayCertificateRegex = /window\.data\s*=\s*\{([\s\S]*?)\};/;
-//let re = /"username":\s*"(\w+)",\s*([\s\S]*?)"profile_url":\s*"(.*?)"/gm
-//let re = /"username":\s*"(\w+)",\s*([\s\S]*?)"careers":\s*\[((?:(?!\[\]|\]).)*)\]/gm;
 let reg_username_careers = /"username":\s*"(\w+)",\s*([\s\S]*?)"careers":\s*\[(.*?)\]/s;
 let reg_username_profile_url = /"username"\s*:\s*"([^"]+)".*?"profile_url"\s*:\s*"([^"]+)"/s;
-//let re = /"username":\s*"(\w+)",\s*([\s\S]*?)"careers":\s*\[\]/s;
 let arrayCertificateRegexCurses = /courses:\s*\[\s*{.*?},?\s*\]/i;
 let regexCurses = /\[[^\]]*\]/i;
 let b = 0;
 let firstResponse;
 
-
-/* let myHeaders = new Headers();
-myHeaders.append("Cookie", "isLogged=true;"); */
-
-let requestOptions = {
-    method: 'GET',
-    headers: {
-        server: 'cloudflare',
-        'set-cookie': ['Cache-Control=no-cache'],
-        'strict-transport-security': 'max-age=15552000; includeSubDomains; preload',
-        'transfer-encoding': 'chunked',
-    },
-    redirect: 'follow'
-};
+const requestOptions = { method: 'GET', headers: { Cookie: 'isLogged=true;', 'Cache-Control': 'no-cache' }, redirect: 'follow' };
 
 app.use(express.json());
+
+/*------------------- URL ---------------------*/
 
 app.get('/', (req, res) => {
     res.send('Node JS Api')
 });
 
+
 app.get('/api/students/:id', async (req, res) => {
 
     try {
         const user = req.params.id;
-        console.log(user);
+
         if (b == 0) {
             b++
             // Realizamos la primera petición
             firstResponse = await fetch(`${API}${user}/`, requestOptions);
-            console.log("firstResponse "+firstResponse.status);
+            console.log( "firstResponse Status " + firstResponse.status);
 
             // Si la respuesta de la primera petición es diferente a 200, detenemos el proceso
             if (firstResponse.status !== 200) {
@@ -58,12 +47,13 @@ app.get('/api/students/:id', async (req, res) => {
         const secondResponse = await fetch(`${API}${user}/`, {
             ...requestOptions,
             headers: {
-                //...myHeaders,
                 Cookie: firstResponse.headers.get('set-cookie'),
                 'Cache-Control': 'no-cache',
             },
         });
-        console.log("secondResponse " +secondResponse.status);
+
+        console.log( "secondResponse Status" + secondResponse.status);
+
         // Si la respuesta de la segunda petición es diferente a 200, detenemos el proceso
         if (secondResponse.status !== 200) {
             return res.status(secondResponse.status).send(secondResponse.statusText);
@@ -114,10 +104,7 @@ app.get('/api/students/:id', async (req, res) => {
             } catch (error) {
                 console.log(error);
             }
-
-
         }
-
 
     } catch (error) {
         console.error(error);
