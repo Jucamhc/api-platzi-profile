@@ -21,8 +21,25 @@ myHeaders.append("Cookie", "isLogged=true;"); */
 let requestOptions = {
     method: 'GET',
     headers: {
-        'Cookie': 'isLogged=true;',
-        'Cache-Control': 'no-cache',
+        age: '1349',
+        'alt-svc': 'h3=":443"; ma=86400, h3-29=":443"; ma=86400',
+        'cache-control': 'no-store',
+        'cf-cache-status': 'HIT',
+        'cf-ray': '7c23d7310b1d0ddf-SCL',
+        connection: 'close',
+        'content-encoding': 'br',
+        'content-language': 'es-co',
+        'content-type': 'text/html; charset=utf-8',
+        date: 'Thu, 04 May 2023 21:29:41 GMT',
+        expires: 'Fri, 03 May 2024 21:29:41 GMT',
+        'last-modified': 'Thu, 04 May 2023 14:44:36 GMT',
+        server: 'cloudflare',
+        'strict-transport-security': 'max-age=15552000; includeSubDomains; preload',
+        'transfer-encoding': 'chunked',
+        vary: 'Accept-Encoding, Accept-Language, Cookie, Origin',
+        'x-content-type-options': 'nosniff',
+        'x-frame-options': 'SAMEORIGIN',
+        'x-xss-protection': '1; mode=block'
     },
     redirect: 'follow'
 };
@@ -51,7 +68,7 @@ app.get('/api/students/:id', async (req, res) => {
 
             return consult(firstResponse)
         }
-
+        console.log(firstResponse);
         // Realizamos la segunda petición utilizando el valor de la primera respuesta
         const secondResponse = await fetch(`${API}${user}/`, {
             ...requestOptions,
@@ -97,7 +114,7 @@ app.get('/api/students/:id', async (req, res) => {
 
                 //console.log(jsonData);
 
-               let jsonData_username_careers = reg_username_careers.exec(jsonData);
+                let jsonData_username_careers = reg_username_careers.exec(jsonData);
 
                 if (null != jsonData_username_careers) {
                     jsonData_username_careers = JSON.parse("{" + jsonData_username_careers[0] + "}");
