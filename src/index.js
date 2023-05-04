@@ -34,13 +34,14 @@ let requestOptions = {
         expires: 'Fri, 03 May 2024 21:29:41 GMT',
         'last-modified': 'Thu, 04 May 2023 14:44:36 GMT',
         server: 'cloudflare',
+        'set-cookie': ['__cf_bm=72dDuBFeAJgr2Q.C4fc71UPZXDEydu3.DnTlnF2uvVU-1683236758-0-AfmPao5Kaq4g7cMuQ02nRoHrMatwyZxxkLZbyL5ebC1pXUAYqJNac8Y4CS+6WsLB2vBOnWutb4/Jcz21Xw5sgG4=; path=/; expires=Thu, 04-May-23 22:15:58 GMT; domain=.platzi.com; HttpOnly; Secure; SameSite=None, _cfuvid=fsqB_3xbeE1z0u7jTzI.lZKgRLnxNPJHRxWqbTNBo_Y-1683236758603-0-604800000; path=/; domain=.platzi.com; HttpOnly; Secure; SameSite=None'],
         'strict-transport-security': 'max-age=15552000; includeSubDomains; preload',
         'transfer-encoding': 'chunked',
         vary: 'Accept-Encoding, Accept-Language, Cookie, Origin',
         'x-content-type-options': 'nosniff',
         'x-frame-options': 'SAMEORIGIN',
         'x-xss-protection': '1; mode=block'
-    },
+      },
     redirect: 'follow'
 };
 
@@ -54,7 +55,7 @@ app.get('/api/students/:id', async (req, res) => {
 
     try {
         const user = req.params.id;
-        console.log(user);
+
         if (b == 0) {
             b++
             // Realizamos la primera petición
@@ -68,7 +69,7 @@ app.get('/api/students/:id', async (req, res) => {
 
             return consult(firstResponse)
         }
-        console.log(firstResponse);
+
         // Realizamos la segunda petición utilizando el valor de la primera respuesta
         const secondResponse = await fetch(`${API}${user}/`, {
             ...requestOptions,
