@@ -21,7 +21,7 @@ myHeaders.append("Cookie", "isLogged=true;"); */
 let requestOptions = {
     method: 'GET',
     headers: {
-        Cookie: 'isLogged=true;',
+        'Cookie': 'isLogged=true;',
         'Cache-Control': 'no-cache',
     },
     redirect: 'follow'
