@@ -15,8 +15,8 @@ let b = 0;
 let firstResponse;
 
 
-let myHeaders = new Headers();
-myHeaders.append("Cookie", "isLogged=true;");
+/* let myHeaders = new Headers();
+myHeaders.append("Cookie", "isLogged=true;"); */
 
 let requestOptions = {
     method: 'GET',
@@ -56,7 +56,7 @@ app.get('/api/students/:id', async (req, res) => {
         const secondResponse = await fetch(`${API}${user}/`, {
             ...requestOptions,
             headers: {
-                ...myHeaders,
+                //...myHeaders,
                 Cookie: firstResponse.headers.get('set-cookie'),
                 'Cache-Control': 'no-cache',
             },
