@@ -34,7 +34,7 @@ let requestOptions = {
         expires: 'Fri, 03 May 2024 21:29:41 GMT',
         'last-modified': 'Thu, 04 May 2023 14:44:36 GMT',
         server: 'cloudflare',
-        'set-cookie': ['__cf_bm=72dDuBFeAJgr2Q.C4fc71UPZXDEydu3.DnTlnF2uvVU-1683236758-0-AfmPao5Kaq4g7cMuQ02nRoHrMatwyZxxkLZbyL5ebC1pXUAYqJNac8Y4CS+6WsLB2vBOnWutb4/Jcz21Xw5sgG4=; path=/; expires=Thu, 04-May-23 22:15:58 GMT; domain=.platzi.com; HttpOnly; Secure; SameSite=None, _cfuvid=fsqB_3xbeE1z0u7jTzI.lZKgRLnxNPJHRxWqbTNBo_Y-1683236758603-0-604800000; path=/; domain=.platzi.com; HttpOnly; Secure; SameSite=None'],
+        'set-cookie': ['Cache-Control=no-cache'],
         'strict-transport-security': 'max-age=15552000; includeSubDomains; preload',
         'transfer-encoding': 'chunked',
         vary: 'Accept-Encoding, Accept-Language, Cookie, Origin',
