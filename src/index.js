@@ -15,10 +15,10 @@ let b = 0;
 let firstResponse;
 
 
-var myHeaders = new Headers();
+let myHeaders = new Headers();
 myHeaders.append("Cookie", "isLogged=true;");
 
-var requestOptions = {
+let requestOptions = {
     method: 'GET',
     headers: {
         Cookie: 'isLogged=true;',
