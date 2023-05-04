@@ -37,12 +37,12 @@ app.get('/api/students/:id', async (req, res) => {
 
     try {
         const user = req.params.id;
-
+        console.log(user);
         if (b == 0) {
             b++
             // Realizamos la primera petición
             firstResponse = await fetch(`${API}${user}/`, requestOptions);
-            //console.log(firstResponse.status);
+            console.log(firstResponse.status);
 
             // Si la respuesta de la primera petición es diferente a 200, detenemos el proceso
             if (firstResponse.status !== 200) {
