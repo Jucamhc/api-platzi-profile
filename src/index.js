@@ -43,7 +43,8 @@ app.get('/api_profile/:id', async (req, res, next) => {
             // Realizamos la primera petición
             firstResponse = await fetch(`${API}${user}/`, {
                 headers: {
-                    Cookie: '__cf_bm=r9bVflXJHIgfc8JSPKr_Pat3CJ79blQdE6cTakRGPIU-1683287286-0-AaVWNw1eTs3qQ1dwzs+rD9Dq+rU2AzScbhlCAKhEZ4xRJrwzg3asEW39s/P6HNE5t69Obim0vZbFQg4CMYDrs4k=; path=/; expires=Fri, 05-May-23 12:18:06 GMT; domain=.platzi.com; HttpOnly; Secure; SameSite=None',
+                    Cookie: '__cf_bm=r9bVflXJHIgfc8JSPKr_Pat3CJ79blQdE6cTakRGPIU-1683287286-0-AaVWNw1eTs3qQ1dwzs+rD9Dq+rU2AzScbhlCAKhEZ4xRJrwzg3asEW39s/P6HNE5t69Obim0vZbFQg4CMYDrs4k=; path=/; expires=Fri, domain=.platzi.com; HttpOnly; Secure; SameSite=None',
+                    'Cache-Control': 'no-cache'
                 }
             },);
             console.log("firstResponse Status " + firstResponse.status);
