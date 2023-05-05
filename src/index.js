@@ -43,7 +43,8 @@ app.get('/api_profile/:id', async (req, res, next) => {
             // Realizamos la primera petición
             firstResponse = await fetch(`${API}${user}/`, {
                 headers: {
-                    Cookie: '__cf_bm=/; path=/; domain=.platzi.com; HttpOnly; Secure; SameSite=None, _cfuvid=/; path=/; domain=.platzi.com; HttpOnly; Secure; SameSite=None',
+                    Cookie: ['__cf_bm=/; path=/; expires=Fri, 05-May-23 12:45:07 GMT; domain=.platzi.com; HttpOnly; Secure; SameSite=None',    
+                    '_cfuvid=/; path=/; domain=.platzi.com; HttpOnly; Secure; SameSite=None'],
                     'Cache-Control': 'no-cache'
                 }
             },);
