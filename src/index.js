@@ -59,8 +59,10 @@ app.get('/api_profile/:id', async (req, res, next) => {
 
         // Realizamos la segunda petición utilizando el valor de la primera respuesta
         const secondResponse = await fetch(`${API}${user}/`, {
+            ...requestOptions,
             headers: {
-                Cookie: `${firstResponse.headers.get('set-cookie')}`
+                Cookie: firstResponse.headers.get('set-cookie'),
+                'Cache-Control': 'no-cache',
             },
         });
         //secondResponse = firstResponse
