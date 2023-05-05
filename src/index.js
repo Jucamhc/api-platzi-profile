@@ -14,13 +14,13 @@ let regexCurses = /\[[^\]]*\]/i;
 let b = 0;
 let firstResponse;
 
-const requestOptions = {
+/* const requestOptions = {
     headers: {
         Cookie: '__cf_bm=2CFIq44Frj91S00QhJnj1NIAKfAKCvaokhtepIr159g-1683283362-0-AfXqeETJ8IJDxhJI1qYzRUcx79y4Hk8NSmDAqqB6hWoInthno6k/4pyI7kvMQIh6xpbwS5P1rlnQmUklyvsz7ss=; path=/; expires=Fri, domain=.platzi.com; HttpOnly; Secure; SameSite=None, _cfuvid=R5eaeNLJYmulPdOa2cuucV0PwwxeNNHDElXBlcUSRlc-1683283362497-0-604800000; path=/; domain=.platzi.com; HttpOnly; Secure; SameSite=None ',
         'Cache-Control': 'no-cache',
     }
 };
-
+ */
 
 
 app.use(express.json());
@@ -40,7 +40,12 @@ app.get('/api_profile/:id', async (req, res, next) => {
         if (b == 0) {
             b++
             // Realizamos la primera petición
-            firstResponse = await fetch(`${API}${user}/`, requestOptions );
+            firstResponse = await fetch(`${API}${user}/`, {
+                headers: {
+                    Cookie: '__cf_bm=2CFIq44Frj91S00QhJnj1NIAKfAKCvaokhtepIr159g-1683283362-0-AfXqeETJ8IJDxhJI1qYzRUcx79y4Hk8NSmDAqqB6hWoInthno6k/4pyI7kvMQIh6xpbwS5P1rlnQmUklyvsz7ss=; path=/; expires=Fri, domain=.platzi.com; HttpOnly; Secure; SameSite=None, _cfuvid=R5eaeNLJYmulPdOa2cuucV0PwwxeNNHDElXBlcUSRlc-1683283362497-0-604800000; path=/; domain=.platzi.com; HttpOnly; Secure; SameSite=None ',
+                    'Cache-Control': 'no-cache',
+                }
+            });
             console.log("firstResponse Status " + firstResponse.status);
 
             // Si la respuesta de la primera petición es diferente a 200, detenemos el proceso
@@ -51,7 +56,7 @@ app.get('/api_profile/:id', async (req, res, next) => {
 
             return consult(firstResponse)
         }
-        console.log(firstResponse);
+        console.log(firstResponse.headers);
         // Realizamos la segunda petición utilizando el valor de la primera respuesta
         const secondResponse = await fetch(`${API}${user}/`, {
             headers: {
