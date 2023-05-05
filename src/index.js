@@ -43,8 +43,7 @@ app.get('/api_profile/:id', async (req, res, next) => {
             // Realizamos la primera petición
             firstResponse = await fetch(`${API}${user}/`, {
                 headers: {
-                    Cookie: '__cf_bm=2CFIq44Frj91S00QhJnj1NIAKfAKCvaokhtepIr159g-1683283362-0-AfXqeETJ8IJDxhJI1qYzRUcx79y4Hk8NSmDAqqB6hWoInthno6k/4pyI7kvMQIh6xpbwS5P1rlnQmUklyvsz7ss=; path=/; expires=Fri, domain=.platzi.com; HttpOnly; Secure; SameSite=None, _cfuvid=R5eaeNLJYmulPdOa2cuucV0PwwxeNNHDElXBlcUSRlc-1683283362497-0-604800000; path=/; domain=.platzi.com; HttpOnly; Secure; SameSite=None ',
-                    'Cache-Control': 'no-cache',
+                    Cookie: '__cf_bm=r9bVflXJHIgfc8JSPKr_Pat3CJ79blQdE6cTakRGPIU-1683287286-0-AaVWNw1eTs3qQ1dwzs+rD9Dq+rU2AzScbhlCAKhEZ4xRJrwzg3asEW39s/P6HNE5t69Obim0vZbFQg4CMYDrs4k=; path=/; expires=Fri, 05-May-23 12:18:06 GMT; domain=.platzi.com; HttpOnly; Secure; SameSite=None',
                 }
             },);
             console.log("firstResponse Status " + firstResponse.status);
@@ -54,25 +53,22 @@ app.get('/api_profile/:id', async (req, res, next) => {
                 return res.set('Cache-Control', 'no-store').status(firstResponse.status).send("user does not exist DB");
                 next();
             }
-
             return consult(firstResponse)
         }
 
         // Realizamos la segunda petición utilizando el valor de la primera respuesta
         const secondResponse = await fetch(`${API}${user}/`, {
             headers: {
-                //Cookie: firstResponse.headers.get('set-cookie'),
-                Cookie: '__cf_bm=2CFIq44Frj91S00QhJnj1NIAKfAKCvaokhtepIr159g-1683283362-0-AfXqeETJ8IJDxhJI1qYzRUcx79y4Hk8NSmDAqqB6hWoInthno6k/4pyI7kvMQIh6xpbwS5P1rlnQmUklyvsz7ss=; path=/; expires=Fri, domain=.platzi.com; HttpOnly; Secure; SameSite=None, _cfuvid=R5eaeNLJYmulPdOa2cuucV0PwwxeNNHDElXBlcUSRlc-1683283362497-0-604800000; path=/; domain=.platzi.com; HttpOnly; Secure; SameSite=None ',
-                'Cache-Control': 'no-cache',
+                Cookie: `${firstResponse.headers.get('set-cookie')}`
             },
-
         });
-        //console.log(firstResponse.headers.get('set-cookie'))
+        //secondResponse = firstResponse
+        console.log(firstResponse.headers.get('set-cookie'))
         console.log("secondResponse Status " + secondResponse.status);
 
         // Si la respuesta de la segunda petición es diferente a 200, detenemos el proceso
         if (secondResponse.status !== 200) {
-            return res.set('Cache-Control', 'no-store').res.status(secondResponse.status).send(secondResponse.statusText);
+            return res.set('Cache-Control', 'no-store').status(secondResponse.status).send(secondResponse.statusText);
         }
 
         // Si todo fue exitoso, dentra en la funcion
