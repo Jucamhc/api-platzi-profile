@@ -15,8 +15,10 @@ let b = 0;
 let firstResponse;
 
 const requestOptions = {
-    Cookie: '__cf_bm=2CFIq44Frj91S00QhJnj1NIAKfAKCvaokhtepIr159g-1683283362-0-AfXqeETJ8IJDxhJI1qYzRUcx79y4Hk8NSmDAqqB6hWoInthno6k/4pyI7kvMQIh6xpbwS5P1rlnQmUklyvsz7ss=; path=/; expires=Fri, domain=.platzi.com; HttpOnly; Secure; SameSite=None, _cfuvid=R5eaeNLJYmulPdOa2cuucV0PwwxeNNHDElXBlcUSRlc-1683283362497-0-604800000; path=/; domain=.platzi.com; HttpOnly; Secure; SameSite=None ',
-    'Cache-Control': 'no-cache',
+    headers: {
+        Cookie: '__cf_bm=2CFIq44Frj91S00QhJnj1NIAKfAKCvaokhtepIr159g-1683283362-0-AfXqeETJ8IJDxhJI1qYzRUcx79y4Hk8NSmDAqqB6hWoInthno6k/4pyI7kvMQIh6xpbwS5P1rlnQmUklyvsz7ss=; path=/; expires=Fri, domain=.platzi.com; HttpOnly; Secure; SameSite=None, _cfuvid=R5eaeNLJYmulPdOa2cuucV0PwwxeNNHDElXBlcUSRlc-1683283362497-0-604800000; path=/; domain=.platzi.com; HttpOnly; Secure; SameSite=None ',
+        'Cache-Control': 'no-cache',
+    }
 };
 
 
