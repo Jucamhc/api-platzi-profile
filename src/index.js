@@ -4,7 +4,6 @@ const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fet
 const API = 'https://platzi.com/p/'
 const https = require('https');
 
-
 /*------------------- VARIABLES  ----------------------*/
 
 let arrayCertificateRegex = /window\.data\s*=\s*\{([\s\S]*?)\};/;
@@ -15,35 +14,25 @@ let regexCurses = /\[[^\]]*\]/i;
 let b = 0;
 let firstResponse = { status: 900 }
 
-
-/* const requestOptions = {
-    method: 'GET',
-    agent: new https.Agent({
-        honorCipherOrder: true,
-        rejectUnauthorized: false,
-        secureOptions: ['SSL_OP_NO_TLSv1']
-    })
-}; */
-
 const requestOptions = {
     method: 'GET',
     headers: {
-      'Content-Type': 'application/json'
+        'Content-Type': 'application/json'
     },
     agent: new https.Agent({
-      minVersion: 'TLSv1.3',
-      maxVersion: 'TLSv1.3'
+        minVersion: 'TLSv1.3',
+        maxVersion: 'TLSv1.3'
     })
-  };
+};
 
 app.use(express.json());
 
 /*------------------- URL ---------------------*/
 
 app.get('/', (req, res) => {
-    res.send('Node JS Api')
+    res.send('Hola, Esta Api esta diseña con fines educativos y compartir en comunidad el acceso a su informacion mediante una consulta, la respuesta se da en un array accede a esta url '
+    + "mas URL/api_profile/TU_USUARIO")
 });
-
 
 app.get('/api_profile/:id', async (req, res) => {
 
@@ -52,12 +41,15 @@ app.get('/api_profile/:id', async (req, res) => {
 
         if (b == 0) {
             b++
+            firstFetch(user)
+        } else {
+            secondFetch(user)
+        }
 
-            // Realizamos la primera petición
+        async function firstFetch(user) {
+
             firstResponse = await fetch(`${API}${user}/`, requestOptions);
-            console.log("firstResponse Status " + firstResponse.status);
 
-            // Si la respuesta de la primera petición es diferente a 200, detenemos el proceso
             if (firstResponse.status !== 200) {
                 return res.status(firstResponse.status).send("user does not exist DB");
             }
@@ -65,67 +57,61 @@ app.get('/api_profile/:id', async (req, res) => {
             return consult(firstResponse)
         }
 
-        // Realizamos la segunda petición utilizando el valor de la primera respuesta
-        const secondResponse = await fetch(`${API}${user}/`, {
-            ...requestOptions,
-            headers: {
-                Cookie: firstResponse.headers.get('set-cookie'),
-                'Cache-Control': 'no-cache',
-            },
-        });
+        async function secondFetch() {
 
-        console.log("secondResponse Status " + secondResponse.status);
+            const secondResponse = await fetch(`${API}${user}/`, {
+                ...requestOptions,
+                headers: {
+                    Cookie: firstResponse.headers.get('set-cookie'),
+                    'Cache-Control': 'no-cache',
+                },
+            });
 
-        // Si la respuesta de la segunda petición es diferente a 200, detenemos el proceso
-        if (secondResponse.status !== 200) {
-            return res.status(secondResponse.status).send(secondResponse.statusText);
+            if (secondResponse.status !== 200) {
+                firstFetch(user)
+            }
+
+            return consult(secondResponse)
         }
 
-        // Si todo fue exitoso, dentra en la funcion
-        return consult(secondResponse)
-
         async function consult(consult) {
-            try {
 
-                let respuesta = await consult.text();
-                let matches = arrayCertificateRegex.exec(respuesta);
-                if (null == matches) {
-                    res.send("THE PERFIL IS PRIVATE");
-                };
-                let corchetes = matches[1].replace(/\'/g, "\"");
+            let respuesta = await consult.text();
+            let matches = arrayCertificateRegex.exec(respuesta);
 
-                let matchesCursos = arrayCertificateRegexCurses.exec(respuesta);
-                let jsonCourses = JSON.parse(regexCurses.exec(matchesCursos));
+            if (null == matches) {
+                res.send("THE PERFIL IS PRIVATE");
+            };
+            let corchetes = matches[1].replace(/\'/g, "\"");
 
-                let jsonData = JSON.stringify(`{${corchetes}}`);
-                jsonData = jsonData.replace(/(['"])?([a-zA-Z0-9]+)(['"])?:/g, '"$2": ');
-                jsonData = jsonData.replace(/\\n/g, "");
-                jsonData = jsonData.replace(/\\/g, '');
-                jsonData = jsonData.trim().substring(1, jsonData.length - 1);
-                jsonData = jsonData.trim().substring(1, jsonData.length - 1);
-                jsonData = jsonData.replace(/"https": \/\/+/g, '"https://');
-                jsonData = jsonData.replace('profile_"url":', '"profile_url":');
-                jsonData = jsonData.replace('"Twitter":', 'Twitter:');
-                jsonData = jsonData.replace('"Instagram":', 'Instagram:');
-                jsonData = jsonData.replace('"http":', '"http:');
+            let matchesCursos = arrayCertificateRegexCurses.exec(respuesta);
+            let jsonCourses = JSON.parse(regexCurses.exec(matchesCursos));
 
-                //console.log(jsonData);
+            let jsonData = JSON.stringify(`{${corchetes}}`);
+            jsonData = jsonData.replace(/(['"])?([a-zA-Z0-9]+)(['"])?:/g, '"$2": ');
+            jsonData = jsonData.replace(/\\n/g, "");
+            jsonData = jsonData.replace(/\\/g, '');
+            jsonData = jsonData.trim().substring(1, jsonData.length - 1);
+            jsonData = jsonData.trim().substring(1, jsonData.length - 1);
+            jsonData = jsonData.replace(/"https": \/\/+/g, '"https://');
+            jsonData = jsonData.replace('profile_"url":', '"profile_url":');
+            jsonData = jsonData.replace('"Twitter":', 'Twitter:');
+            jsonData = jsonData.replace('"Instagram":', 'Instagram:');
+            jsonData = jsonData.replace('"http":', '"http:');
 
-                let jsonData_username_careers = reg_username_careers.exec(jsonData);
+            let jsonData_username_careers = reg_username_careers.exec(jsonData);
 
-                if (null != jsonData_username_careers) {
-                    jsonData_username_careers = JSON.parse("{" + jsonData_username_careers[0] + "}");
-                    jsonData_username_careers.courses = jsonCourses;
-                    res.send(jsonData_username_careers);
-                } else {
-                    let jsonData_username_profile_url = reg_username_profile_url.exec(jsonData);
-                    jsonData_username_profile_url = JSON.parse("{" + jsonData_username_profile_url[0] + "}");
-                    jsonData_username_profile_url.courses = jsonCourses
-                    res.send(jsonData_username_profile_url);
-                }
-            } catch (error) {
-                console.log(error);
+            if (null != jsonData_username_careers) {
+                jsonData_username_careers = JSON.parse("{" + jsonData_username_careers[0] + "}");
+                jsonData_username_careers.courses = jsonCourses;
+                res.send(jsonData_username_careers);
+            } else {
+                let jsonData_username_profile_url = reg_username_profile_url.exec(jsonData);
+                jsonData_username_profile_url = JSON.parse("{" + jsonData_username_profile_url[0] + "}");
+                jsonData_username_profile_url.courses = jsonCourses
+                res.send(jsonData_username_profile_url);
             }
+
         }
 
     } catch (error) {
