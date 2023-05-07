@@ -38,8 +38,8 @@ app.get('/api_profile/:id', async (req, res, next) => {
     try {
         const user = req.params.id;
 
-        if (b == 0) {
-            b++
+/*         if (b == 0) {
+            b++ */
             // Realizamos la primera petición
             firstResponse = await fetch(`${API}${user}/`, {
                 headers: {
@@ -56,7 +56,7 @@ app.get('/api_profile/:id', async (req, res, next) => {
             }
 
             return consult(firstResponse)
-        }
+/*         }
 
         // Realizamos la segunda petición utilizando el valor de la primera respuesta
         const secondResponse = await fetch(`${API}${user}/`, {
@@ -72,11 +72,11 @@ app.get('/api_profile/:id', async (req, res, next) => {
 
         // Si la respuesta de la segunda petición es diferente a 200, detenemos el proceso
         if (secondResponse.status !== 200) {
-            return res.set('Cache-Control', 'no-store').res.status(secondResponse.status).send(secondResponse.statusText);
-        }
+            return res.set('Cache-Control', 'no-store').status(secondResponse.status).send(secondResponse.statusText);
+        } */
 
         // Si todo fue exitoso, dentra en la funcion
-        return consult(secondResponse)
+        //return consult(secondResponse)
 
         async function consult(consult) {
             try {

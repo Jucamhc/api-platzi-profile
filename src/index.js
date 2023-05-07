@@ -2,7 +2,8 @@ const express = require('express');
 const app = express()
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 const API = 'https://platzi.com/p/'
-const nocache = require('nocache');
+const https = require('https');
+
 
 /*------------------- VARIABLES  ----------------------*/
 
@@ -12,20 +13,19 @@ let reg_username_profile_url = /"username"\s*:\s*"([^"]+)".*?"profile_url"\s*:\s
 let arrayCertificateRegexCurses = /courses:\s*\[\s*{.*?},?\s*\]/i;
 let regexCurses = /\[[^\]]*\]/i;
 let b = 0;
-let firstResponse;
+let firstResponse = { status: 900 }
+
+const agent = new https.Agent({
+    rejectUnauthorized: false
+});
 
 const requestOptions = {
     method: 'GET',
-    headers: {
-        server: 'cloudflare',
-        'set-cookie': ['Cookie: isLogged=true;', 'Cache-Control: no-store']
-    },
-    redirect: 'follow'
+    agent: agent
 };
 
-
 app.use(express.json());
-app.use(nocache());
+
 /*------------------- URL ---------------------*/
 
 app.get('/', (req, res) => {
@@ -33,28 +33,23 @@ app.get('/', (req, res) => {
 });
 
 
-app.get('/api_profile/:id', async (req, res, next) => {
+app.get('/api_profile/:id', async (req, res) => {
 
     try {
         const user = req.params.id;
 
         if (b == 0) {
             b++
+
             // Realizamos la primera petición
-            firstResponse = await fetch(`${API}${user}/`, {
-                headers: {
-                    Cookie: ['__cf_bm=/; path=/; expires=Fri, 05-May-23 12:45:07 GMT; domain=.platzi.com; HttpOnly; Secure; SameSite=None',    
-                    '_cfuvid=/; path=/; domain=.platzi.com; HttpOnly; Secure; SameSite=None'],
-                    'Cache-Control': 'no-cache'
-                }
-            },);
+            firstResponse = await fetch(`${API}${user}/`, requestOptions);
             console.log("firstResponse Status " + firstResponse.status);
 
             // Si la respuesta de la primera petición es diferente a 200, detenemos el proceso
             if (firstResponse.status !== 200) {
-                return res.set('Cache-Control', 'no-store').status(firstResponse.status).send("user does not exist DB");
-                next();
+                return res.status(firstResponse.status).send("user does not exist DB");
             }
+
             return consult(firstResponse)
         }
 
@@ -66,13 +61,12 @@ app.get('/api_profile/:id', async (req, res, next) => {
                 'Cache-Control': 'no-cache',
             },
         });
-        //secondResponse = firstResponse
-        console.log(firstResponse.headers.get('set-cookie'))
+
         console.log("secondResponse Status " + secondResponse.status);
 
         // Si la respuesta de la segunda petición es diferente a 200, detenemos el proceso
         if (secondResponse.status !== 200) {
-            return res.set('Cache-Control', 'no-store').status(secondResponse.status).send(secondResponse.statusText);
+            return res.status(secondResponse.status).send(secondResponse.statusText);
         }
 
         // Si todo fue exitoso, dentra en la funcion
@@ -110,12 +104,12 @@ app.get('/api_profile/:id', async (req, res, next) => {
                 if (null != jsonData_username_careers) {
                     jsonData_username_careers = JSON.parse("{" + jsonData_username_careers[0] + "}");
                     jsonData_username_careers.courses = jsonCourses;
-                    res.set('Cache-Control', 'no-store').send(jsonData_username_careers);
+                    res.send(jsonData_username_careers);
                 } else {
                     let jsonData_username_profile_url = reg_username_profile_url.exec(jsonData);
                     jsonData_username_profile_url = JSON.parse("{" + jsonData_username_profile_url[0] + "}");
                     jsonData_username_profile_url.courses = jsonCourses
-                    res.set('Cache-Control', 'no-store').send(jsonData_username_profile_url);
+                    res.send(jsonData_username_profile_url);
                 }
             } catch (error) {
                 console.log(error);
