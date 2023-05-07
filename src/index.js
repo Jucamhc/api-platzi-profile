@@ -16,14 +16,25 @@ let b = 0;
 let firstResponse = { status: 900 }
 
 
-const requestOptions = {
+/* const requestOptions = {
     method: 'GET',
     agent: new https.Agent({
         honorCipherOrder: true,
         rejectUnauthorized: false,
         secureOptions: ['SSL_OP_NO_TLSv1']
     })
-};
+}; */
+
+const requestOptions = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    agent: new https.Agent({
+      minVersion: 'TLSv1.3',
+      maxVersion: 'TLSv1.3'
+    })
+  };
 
 app.use(express.json());
 
