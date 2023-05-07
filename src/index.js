@@ -15,13 +15,14 @@ let regexCurses = /\[[^\]]*\]/i;
 let b = 0;
 let firstResponse = { status: 900 }
 
-const agent = new https.Agent({
-    rejectUnauthorized: false
-});
 
 const requestOptions = {
     method: 'GET',
-    agent: agent
+    agent: new https.Agent({
+        honorCipherOrder: true,
+        rejectUnauthorized: false,
+        secureOptions: ['SSL_OP_NO_TLSv1']
+    })
 };
 
 app.use(express.json());
