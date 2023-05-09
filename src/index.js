@@ -112,7 +112,7 @@ app.get('/api_profile/:id', async (req, res) => {
                 res.setHeader('Content-Type', 'application/json');
                 res.header("Access-Control-Allow-Origin", "*");
                 res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-                res.send(JSON.stringify(jsonData_username_profile_url));
+                res.status(200).send(JSON.stringify(jsonData_username_profile_url));
             }
 
         }
@@ -123,5 +123,5 @@ app.get('/api_profile/:id', async (req, res) => {
     }
 })
 
-const port = process.env.port || 80;
-app.listen(port, () => console.log(`Escuchando en el puerto ${port}`));
+//const port = process.env.port || 80;
+app.listen(PORT, () => console.log(`Escuchando en el puerto ${PORT}`));
