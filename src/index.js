@@ -110,6 +110,7 @@ app.get('/api_profile/:id', async (req, res) => {
                 jsonData_username_profile_url = JSON.parse("{" + jsonData_username_profile_url[0] + "}");
                 jsonData_username_profile_url.courses = jsonCourses
                 res.setHeader('Content-Type', 'application/json');
+                res.setHeader('Access-Control-Allow-Origin', '*');
                 res.send(JSON.stringify(jsonData_username_profile_url));
             }
 
