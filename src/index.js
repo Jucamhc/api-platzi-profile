@@ -31,7 +31,7 @@ app.use(express.json());
 
 app.get('/', (req, res) => {
     res.send('Hola, Esta Api esta diseña con fines educativos y compartir en comunidad el acceso a su informacion mediante una consulta, la respuesta se da en un array accede a esta url '
-    + "mas URL/api_profile/TU_USUARIO")
+        + "mas URL/api_profile/TU_USUARIO")
 });
 
 app.get('/api_profile/:id', async (req, res) => {
@@ -109,7 +109,8 @@ app.get('/api_profile/:id', async (req, res) => {
                 let jsonData_username_profile_url = reg_username_profile_url.exec(jsonData);
                 jsonData_username_profile_url = JSON.parse("{" + jsonData_username_profile_url[0] + "}");
                 jsonData_username_profile_url.courses = jsonCourses
-                res.send(jsonData_username_profile_url);
+                res.setHeader('Content-Type', 'application/json');
+                res.send(JSON.stringify(jsonData_username_profile_url));
             }
 
         }
