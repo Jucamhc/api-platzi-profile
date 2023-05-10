@@ -3,6 +3,7 @@ const app = express()
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 const API = 'https://platzi.com/p/'
 const https = require('https');
+const cors = require('cors');
 
 /*------------------- VARIABLES  ----------------------*/
 
@@ -26,7 +27,7 @@ const requestOptions = {
 };
 
 app.use(express.json());
-
+app.use(cors());
 /*------------------- URL ---------------------*/
 
 app.get('/', (req, res) => {
@@ -109,10 +110,10 @@ app.get('/api_profile/:id', async (req, res) => {
                 let jsonData_username_profile_url = reg_username_profile_url.exec(jsonData);
                 jsonData_username_profile_url = JSON.parse("{" + jsonData_username_profile_url[0] + "}");
                 jsonData_username_profile_url.courses = jsonCourses
-                res.setHeader('Content-Type', 'application/json');
-                res.header("Access-Control-Allow-Origin", "*");
-                res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
                 res.status(200).send(JSON.stringify(jsonData_username_profile_url));
+                /*  res.setHeader('Content-Type', 'application/json');
+                 res.header("Access-Control-Allow-Origin", "*");
+                 res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept"); */
             }
 
         }
