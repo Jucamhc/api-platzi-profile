@@ -81,7 +81,7 @@ app.get('/api_profile/:id', async (req, res) => {
             let matches = arrayCertificateRegex.exec(respuesta);
 
 
-            if (matches.length >= 1) {
+            if (matches?.length >= 1) {
                 /*             console.log(matches);
                             if (null === matches || "null" === matches ||  matches[1] === null ||  matches[1] === "null") {
                                 res.send("The perfil is private");
