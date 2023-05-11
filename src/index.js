@@ -88,7 +88,7 @@ app.get('/api_profile/:id', async (req, res) => {
                 res.send("THE PROFILE IS PRIVATE OR YOUR PROFILE HAVE OTHER PARAMETER");
             };
 
-            let corchetes = matches[1].replace(/\'/g, "\"");
+            let corchetes = matches[1]?.replace(/\'/g, "\"");
 
             let matchesCursos = arrayCertificateRegexCurses.exec(respuesta);
             let jsonCourses = JSON.parse(regexCurses.exec(matchesCursos));
