@@ -111,11 +111,13 @@ app.get('/api_profile/:id', async (req, res) => {
             if (null != jsonData_username_careers) {
                 jsonData_username_careers = JSON.parse("{" + jsonData_username_careers[0] + "}");
                 jsonData_username_careers.courses = jsonCourses;
+                console.log(jsonData_username_careers.username);
                 res.send(jsonData_username_careers);
             } else {
                 let jsonData_username_profile_url = reg_username_profile_url.exec(jsonData);
                 jsonData_username_profile_url = JSON.parse("{" + jsonData_username_profile_url[0] + "}");
                 jsonData_username_profile_url.courses = jsonCourses
+                console.log(jsonData_username_profile_url.username)
                 res.status(200).send(JSON.stringify(jsonData_username_profile_url));
                 /*  res.setHeader('Content-Type', 'application/json');
                  res.header("Access-Control-Allow-Origin", "*");
