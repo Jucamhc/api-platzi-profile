@@ -84,6 +84,9 @@ app.get('/api_profile/:id', async (req, res) => {
             if (null == matches) {
                 res.send("THE PERFIL IS PRIVATE");
             };
+            if ("null" == matches) {
+                res.send("THE PERFIL IS PRIVATE");
+            };
 
             if ('1' == matches) {
                 res.send("THE PROFILE IS PRIVATE OR YOUR PROFILE HAVE OTHER PARAMETER");
