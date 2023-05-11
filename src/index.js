@@ -83,6 +83,11 @@ app.get('/api_profile/:id', async (req, res) => {
             if (null == matches) {
                 res.send("THE PERFIL IS PRIVATE");
             };
+
+            if ('1' == matches) {
+                res.send("THE PROFILE IS PRIVATE OR YOUR PROFILE HAVE OTHER PARAMETER");
+            };
+
             let corchetes = matches[1].replace(/\'/g, "\"");
 
             let matchesCursos = arrayCertificateRegexCurses.exec(respuesta);
@@ -99,6 +104,7 @@ app.get('/api_profile/:id', async (req, res) => {
             jsonData = jsonData.replace('"Twitter":', 'Twitter:');
             jsonData = jsonData.replace('"Instagram":', 'Instagram:');
             jsonData = jsonData.replace('"http":', '"http:');
+            jsonData = jsonData.replace('."1":', '.1:');
 
             let jsonData_username_careers = reg_username_careers.exec(jsonData);
 
