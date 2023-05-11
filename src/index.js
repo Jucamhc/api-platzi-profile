@@ -79,15 +79,15 @@ app.get('/api_profile/:id', async (req, res) => {
 
             let respuesta = await consult.text();
             let matches = arrayCertificateRegex.exec(respuesta);
-
-            if (null == matches[1]) {
+            
+            console.log(matches);
+            if (null == matches) {
                 res.send("THE PERFIL IS PRIVATE");
             };
 
             if ('1' == matches) {
                 res.send("THE PROFILE IS PRIVATE OR YOUR PROFILE HAVE OTHER PARAMETER");
             };
-            console.log(matches[1]);
             let corchetes = matches[1]?.replace(/\'/g, "\"");
 
             let matchesCursos = arrayCertificateRegexCurses?.exec(respuesta);
