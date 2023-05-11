@@ -90,8 +90,8 @@ app.get('/api_profile/:id', async (req, res) => {
 
             let corchetes = matches[1]?.replace(/\'/g, "\"");
 
-            let matchesCursos = arrayCertificateRegexCurses.exec(respuesta);
-            let jsonCourses = JSON.parse(regexCurses.exec(matchesCursos));
+            let matchesCursos = arrayCertificateRegexCurses?.exec(respuesta);
+            let jsonCourses = JSON.parse(regexCurses?.exec(matchesCursos));
 
             let jsonData = JSON.stringify(`{${corchetes}}`);
             jsonData = jsonData.replace(/(['"])?([a-zA-Z0-9]+)(['"])?:/g, '"$2": ');
