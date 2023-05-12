@@ -80,17 +80,7 @@ app.get('/api_profile/:id', async (req, res) => {
             let respuesta = await consult.text();
             let matches = arrayCertificateRegex.exec(respuesta);
 
-
             if (matches?.length >= 1) {
-                /*             console.log(matches);
-                            if (null === matches || "null" === matches ||  matches[1] === null ||  matches[1] === "null") {
-                                res.send("The perfil is private");
-                            }
-                
-                            if ('1' == matches || '1' === matches[1]) {
-                                res.send("THE PROFILE IS PRIVATE OR YOUR PROFILE HAVE OTHER PARAMETER");
-                            };
-                 */
 
                 let corchetes = matches[1]?.replace(/\'/g, "\"");
 
@@ -112,7 +102,7 @@ app.get('/api_profile/:id', async (req, res) => {
 
                 let jsonData_username_careers = reg_username_careers.exec(jsonData);
 
-                if (jsonData_username_careers &&  null != jsonData_username_careers) {
+                if (null != jsonData_username_careers) {
                     jsonData_username_careers = JSON.parse("{" + jsonData_username_careers[0] + "}");
                     jsonData_username_careers.courses = jsonCourses;
                     console.log(jsonData_username_careers.username);
@@ -128,12 +118,13 @@ app.get('/api_profile/:id', async (req, res) => {
                      res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept"); */
                 }
             } else {
-                if (jsonData_username_careers && null != jsonData_username_careers) {
-                    let jsonData_username_careers = reg_username_careers.exec(jsonData);
-                    jsonData_username_careers = JSON.parse("{" + jsonData_username_careers[0] + "}");
-                    jsonData_username_careers.courses = jsonCourses;
-                    console.log(jsonData_username_careers.username);
-                    res.send(jsonData_username_careers);
+
+                let matchesCursos = arrayCertificateRegexCurses.exec(respuesta);
+                let jsonCourses = regexCurses.exec(matchesCursos);
+                let curses = []
+                if (jsonCourses != null) {
+                    let curses  = JSON.parse(jsonCourses[0])
+                    res.status(200).send(JSON.stringify({ curses: curses }));
                 }
                 res.send("THE PROFILE IS PRIVATE OR YOUR PROFILE HAVE OTHER PARAMETER")
             }
@@ -148,3 +139,14 @@ app.get('/api_profile/:id', async (req, res) => {
 
 const PORT = process.env.PORT || 80;
 app.listen(PORT, () => console.log(`Escuchando en el puerto ${PORT}`));
+
+
+/*             console.log(matches);
+            if (null === matches || "null" === matches ||  matches[1] === null ||  matches[1] === "null") {
+                res.send("The perfil is private");
+            }
+ 
+            if ('1' == matches || '1' === matches[1]) {
+                res.send("THE PROFILE IS PRIVATE OR YOUR PROFILE HAVE OTHER PARAMETER");
+            };
+ */
