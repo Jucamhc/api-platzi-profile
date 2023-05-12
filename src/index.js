@@ -112,7 +112,7 @@ app.get('/api_profile/:id', async (req, res) => {
 
                 let jsonData_username_careers = reg_username_careers.exec(jsonData);
 
-                if (null != jsonData_username_careers) {
+                if (jsonData_username_careers &&  null != jsonData_username_careers) {
                     jsonData_username_careers = JSON.parse("{" + jsonData_username_careers[0] + "}");
                     jsonData_username_careers.courses = jsonCourses;
                     console.log(jsonData_username_careers.username);
