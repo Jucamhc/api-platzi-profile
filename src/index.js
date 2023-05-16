@@ -1,7 +1,7 @@
 const express = require('express');
-const app = express()
+const app = express();
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
-const API = 'https://platzi.com/p/'
+const API = 'https://platzi.com/p/';
 const https = require('https');
 const cors = require('cors');
 
@@ -13,7 +13,7 @@ let reg_username_profile_url = /"username"\s*:\s*"([^"]+)".*?"profile_url"\s*:\s
 let arrayCertificateRegexCurses = /courses:\s*\[\s*{.*?},?\s*\]/i;
 let regexCurses = /\[[^\]]*\]/i;
 let b = 0;
-let firstResponse = { status: 900 }
+let firstResponse = { status: 900 };
 
 const requestOptions = {
     method: 'GET',
@@ -28,38 +28,35 @@ const requestOptions = {
 
 app.use(express.json());
 app.use(cors());
+
 /*------------------- URL ---------------------*/
 
 app.get('/', (req, res) => {
-    res.send('Hola, Esta Api esta diseña con fines educativos y compartir en comunidad el acceso a su informacion mediante una consulta, la respuesta se da en un array accede a esta url '
-        + "mas URL/api_profile/TU_USUARIO")
+    res.send('Hola, esta API está diseñada con fines educativos y para compartir información en comunidad. Puedes acceder a la información a través de una consulta a la siguiente URL: ' + "URL/api_profile/TU_USUARIO");
 });
 
 app.get('/api_profile/:id', async (req, res) => {
-
     try {
         const user = req.params.id;
 
-        if (b == 0) {
-            b++
-            firstFetch(user)
+        if (b === 0) {
+            b++;
+            await firstFetch(user);
         } else {
-            secondFetch(user)
+            await secondFetch(user);
         }
 
         async function firstFetch(user) {
-
             firstResponse = await fetch(`${API}${user}/`, requestOptions);
 
             if (firstResponse.status !== 200) {
-                return res.status(firstResponse.status).send("user does not exist DB");
+                return res.status(firstResponse.status).send("El usuario no existe en la base de datos.");
             }
 
-            return consult(firstResponse)
+            consult(firstResponse);
         }
 
-        async function secondFetch() {
-
+        async function secondFetch(user) {
             const secondResponse = await fetch(`${API}${user}/`, {
                 ...requestOptions,
                 headers: {
@@ -69,21 +66,18 @@ app.get('/api_profile/:id', async (req, res) => {
             });
 
             if (secondResponse.status !== 200) {
-                firstFetch(user)
+                await firstFetch(user);
             }
 
-            return consult(secondResponse)
+            consult(secondResponse);
         }
 
         async function consult(consult) {
-
             let respuesta = await consult.text();
             let matches = arrayCertificateRegex.exec(respuesta);
 
             if (matches?.length >= 1) {
-
                 let corchetes = matches[1]?.replace(/\'/g, "\"");
-
                 let matchesCursos = arrayCertificateRegexCurses?.exec(respuesta);
                 let jsonCourses = JSON.parse(regexCurses?.exec(matchesCursos));
 
@@ -110,25 +104,23 @@ app.get('/api_profile/:id', async (req, res) => {
                 } else {
                     let jsonData_username_profile_url = reg_username_profile_url.exec(jsonData);
                     jsonData_username_profile_url = JSON.parse("{" + jsonData_username_profile_url[0] + "}");
-                    jsonData_username_profile_url.courses = jsonCourses
-                    console.log(jsonData_username_profile_url.username)
+                    jsonData_username_profile_url.courses = jsonCourses;
+                    console.log(jsonData_username_profile_url.username);
                     res.status(200).send(JSON.stringify(jsonData_username_profile_url));
                     /*  res.setHeader('Content-Type', 'application/json');
-                     res.header("Access-Control-Allow-Origin", "*");
-                     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept"); */
+                    res.header("Access-Control-Allow-Origin", "*");
+                    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept"); */
                 }
             } else {
-
                 let matchesCursos = arrayCertificateRegexCurses.exec(respuesta);
                 let jsonCourses = regexCurses.exec(matchesCursos);
-                let curses = []
+                let curses = [];
                 if (jsonCourses != null) {
-                    let curses  = JSON.parse(jsonCourses[0])
+                    curses = JSON.parse(jsonCourses[0]);
                     res.status(200).send(JSON.stringify({ curses: curses }));
                 }
-                res.send("THE PROFILE IS PRIVATE OR YOUR PROFILE HAVE OTHER PARAMETER")
+                res.send("THE PROFILE IS PRIVATE OR YOUR PROFILE HAVE OTHER PARAMETER");
             }
-
         }
 
     } catch (error) {
