@@ -73,53 +73,59 @@ app.get('/api_profile/:id', async (req, res) => {
         }
 
         async function consult(consult) {
-            let respuesta = await consult.text();
-            let matches = arrayCertificateRegex.exec(respuesta);
 
-            if (matches?.length >= 1) {
-                let corchetes = matches[1]?.replace(/\'/g, "\"");
-                let matchesCursos = arrayCertificateRegexCurses?.exec(respuesta);
-                let jsonCourses = JSON.parse(regexCurses?.exec(matchesCursos));
+            try {
 
-                let jsonData = JSON.stringify(`{${corchetes}}`);
-                jsonData = jsonData.replace(/(['"])?([a-zA-Z0-9]+)(['"])?:/g, '"$2": ');
-                jsonData = jsonData.replace(/\\n/g, "");
-                jsonData = jsonData.replace(/\\/g, '');
-                jsonData = jsonData.trim().substring(1, jsonData.length - 1);
-                jsonData = jsonData.trim().substring(1, jsonData.length - 1);
-                jsonData = jsonData.replace(/"https": \/\/+/g, '"https://');
-                jsonData = jsonData.replace('profile_"url":', '"profile_url":');
-                jsonData = jsonData.replace('"Twitter":', 'Twitter:');
-                jsonData = jsonData.replace('"Instagram":', 'Instagram:');
-                jsonData = jsonData.replace('"http":', '"http:');
-                jsonData = jsonData.replace('."1":', '.1:');
+                let respuesta = await consult.text();
+                let matches = arrayCertificateRegex.exec(respuesta);
 
-                let jsonData_username_careers = reg_username_careers.exec(jsonData);
+                if (matches?.length >= 1) {
+                    let corchetes = matches[1]?.replace(/\'/g, "\"");
+                    let matchesCursos = arrayCertificateRegexCurses?.exec(respuesta);
+                    let jsonCourses = JSON.parse(regexCurses?.exec(matchesCursos));
 
-                if (null != jsonData_username_careers) {
-                    jsonData_username_careers = JSON.parse("{" + jsonData_username_careers[0] + "}");
-                    jsonData_username_careers.courses = jsonCourses;
-                    console.log(jsonData_username_careers.username);
-                    res.send(jsonData_username_careers);
+                    let jsonData = JSON.stringify(`{${corchetes}}`);
+                    jsonData = jsonData.replace(/(['"])?([a-zA-Z0-9]+)(['"])?:/g, '"$2": ');
+                    jsonData = jsonData.replace(/\\n/g, "");
+                    jsonData = jsonData.replace(/\\/g, '');
+                    jsonData = jsonData.trim().substring(1, jsonData.length - 1);
+                    jsonData = jsonData.trim().substring(1, jsonData.length - 1);
+                    jsonData = jsonData.replace(/"https": \/\/+/g, '"https://');
+                    jsonData = jsonData.replace('profile_"url":', '"profile_url":');
+                    jsonData = jsonData.replace('"Twitter":', 'Twitter:');
+                    jsonData = jsonData.replace('"Instagram":', 'Instagram:');
+                    jsonData = jsonData.replace('"http":', '"http:');
+                    jsonData = jsonData.replace('."1":', '.1:');
+
+                    let jsonData_username_careers = reg_username_careers.exec(jsonData);
+
+                    if (null != jsonData_username_careers) {
+                        jsonData_username_careers = JSON.parse("{" + jsonData_username_careers[0] + "}");
+                        jsonData_username_careers.courses = jsonCourses;
+                        console.log(jsonData_username_careers.username);
+                        res.send(jsonData_username_careers);
+                    } else {
+                        let jsonData_username_profile_url = reg_username_profile_url.exec(jsonData);
+                        jsonData_username_profile_url = JSON.parse("{" + jsonData_username_profile_url[0] + "}");
+                        jsonData_username_profile_url.courses = jsonCourses;
+                        console.log(jsonData_username_profile_url.username);
+                        res.status(200).send(JSON.stringify(jsonData_username_profile_url));
+                        /*  res.setHeader('Content-Type', 'application/json');
+                        res.header("Access-Control-Allow-Origin", "*");
+                        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept"); */
+                    }
                 } else {
-                    let jsonData_username_profile_url = reg_username_profile_url.exec(jsonData);
-                    jsonData_username_profile_url = JSON.parse("{" + jsonData_username_profile_url[0] + "}");
-                    jsonData_username_profile_url.courses = jsonCourses;
-                    console.log(jsonData_username_profile_url.username);
-                    res.status(200).send(JSON.stringify(jsonData_username_profile_url));
-                    /*  res.setHeader('Content-Type', 'application/json');
-                    res.header("Access-Control-Allow-Origin", "*");
-                    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept"); */
+                    let matchesCursos = arrayCertificateRegexCurses.exec(respuesta);
+                    let jsonCourses = regexCurses.exec(matchesCursos);
+                    let curses = [];
+                    if (jsonCourses != null) {
+                        curses = JSON.parse(jsonCourses[0]);
+                        res.status(200).send(JSON.stringify({ curses: curses }));
+                    }
+                    res.send("THE PROFILE IS PRIVATE OR YOUR PROFILE HAVE OTHER PARAMETER");
                 }
-            } else {
-                let matchesCursos = arrayCertificateRegexCurses.exec(respuesta);
-                let jsonCourses = regexCurses.exec(matchesCursos);
-                let curses = [];
-                if (jsonCourses != null) {
-                    curses = JSON.parse(jsonCourses[0]);
-                    res.status(200).send(JSON.stringify({ curses: curses }));
-                }
-                res.send("THE PROFILE IS PRIVATE OR YOUR PROFILE HAVE OTHER PARAMETER");
+            } catch (error) {
+                console.log(error);
             }
         }
 
