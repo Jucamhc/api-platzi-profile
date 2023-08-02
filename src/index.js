@@ -20,6 +20,7 @@ const requestOptions = {
     headers: {
         'Content-Type': 'application/json'
     },
+    redirect: 'follow',
     agent: new https.Agent({
         minVersion: 'TLSv1.3',
         maxVersion: 'TLSv1.3'
