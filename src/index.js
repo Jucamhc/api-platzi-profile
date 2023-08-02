@@ -50,6 +50,7 @@ app.get('/api_profile/:id', async (req, res) => {
             firstResponse = await fetch(`${API}${user}/`, requestOptions);
 
             if (firstResponse.status !== 200) {
+                console.log("firstResponse");
                 return res.status(firstResponse.status).send("El usuario no existe en la base de datos.");
             }
 
@@ -57,6 +58,7 @@ app.get('/api_profile/:id', async (req, res) => {
         }
 
         async function secondFetch(user) {
+            console.log("secondFetch");
             const secondResponse = await fetch(`${API}${user}/`, {
                 ...requestOptions,
                 headers: {
