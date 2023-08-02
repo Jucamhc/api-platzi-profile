@@ -50,8 +50,7 @@ app.get('/api_profile/:id', async (req, res) => {
             firstResponse = await fetch(`${API}${user}/`, requestOptions);
 
             if (firstResponse.status !== 200) {
-                secondFetch(user)
-                //return res.status(firstResponse.status).send("El usuario no existe en la base de datos");
+                return res.status(firstResponse.status).send("El usuario no existe en la base de datos.");
             }
 
             consult(firstResponse);
@@ -105,19 +104,19 @@ app.get('/api_profile/:id', async (req, res) => {
                         jsonData_username_careers.courses = jsonCourses;
                         console.log(jsonData_username_careers.username);
                         responseToSend = jsonData_username_careers
-                        //res.send(jsonData_username_careers);
+                        res.send(jsonData_username_careers);
                     } else {
                         let jsonData_username_profile_url = reg_username_profile_url.exec(jsonData);
                         jsonData_username_profile_url = JSON.parse("{" + jsonData_username_profile_url[0] + "}");
                         jsonData_username_profile_url.courses = jsonCourses;
                         console.log(jsonData_username_profile_url.username);
                         responseToSend = jsonData_username_profile_url
-                        //res.status(200).send(JSON.stringify(jsonData_username_profile_url));
+                        res.status(200).send(JSON.stringify(jsonData_username_profile_url));
                         /*  res.setHeader('Content-Type', 'application/json');
                         res.header("Access-Control-Allow-Origin", "*");
                         res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept"); */
                     }
-                    res.status(200).send(JSON.stringify(responseToSend));
+                    //res.status(200).send(JSON.stringify(responseToSend));
                 } else {
                     let matchesCursos = arrayCertificateRegexCurses.exec(respuesta);
                     let jsonCourses = regexCurses.exec(matchesCursos);
