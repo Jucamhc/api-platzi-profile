@@ -103,17 +103,20 @@ app.get('/api_profile/:id', async (req, res) => {
                         jsonData_username_careers = JSON.parse("{" + jsonData_username_careers[0] + "}");
                         jsonData_username_careers.courses = jsonCourses;
                         console.log(jsonData_username_careers.username);
-                        res.send(jsonData_username_careers);
+                        responseToSend = jsonData_username_careers
+                        //res.send(jsonData_username_careers);
                     } else {
                         let jsonData_username_profile_url = reg_username_profile_url.exec(jsonData);
                         jsonData_username_profile_url = JSON.parse("{" + jsonData_username_profile_url[0] + "}");
                         jsonData_username_profile_url.courses = jsonCourses;
                         console.log(jsonData_username_profile_url.username);
-                        res.status(200).send(JSON.stringify(jsonData_username_profile_url));
+                        responseToSend = jsonData_username_profile_url
+                        //res.status(200).send(JSON.stringify(jsonData_username_profile_url));
                         /*  res.setHeader('Content-Type', 'application/json');
                         res.header("Access-Control-Allow-Origin", "*");
                         res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept"); */
                     }
+                    res.status(200).send(JSON.stringify(responseToSend));
                 } else {
                     let matchesCursos = arrayCertificateRegexCurses.exec(respuesta);
                     let jsonCourses = regexCurses.exec(matchesCursos);
@@ -121,8 +124,10 @@ app.get('/api_profile/:id', async (req, res) => {
                     if (jsonCourses != null) {
                         curses = JSON.parse(jsonCourses[0]);
                         res.status(200).send(JSON.stringify({ curses: curses }));
+                    } else {
+                        res.send("THE PROFILE IS PRIVATE OR YOUR PROFILE HAVE OTHER PARAMETER");
                     }
-                    res.send("THE PROFILE IS PRIVATE OR YOUR PROFILE HAVE OTHER PARAMETER");
+
                 }
             } catch (error) {
                 console.log(error);
