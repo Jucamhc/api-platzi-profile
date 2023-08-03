@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
-const API = 'https://platzi.com/p/';
 const https = require('https');
 const cors = require('cors');
 
